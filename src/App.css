@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@layer utilities {
+  /* Enhanced Glass Card with Pink/Blue Glow Hover Transitions */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(244, 114, 182, 0.6); /* Pink border glow */
+    box-shadow: 0 15px 35px 0 rgba(244, 114, 182, 0.15); /* Soft pink drop shadow */
+    transform: translateY(-6px) scale(1.01);
+  }
+
+  /* Ultra-blurred Header Navigation */
+  .glass-nav {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  }
+
+  /* Background Floating Blob Animations */
+  @keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(40px, -50px) scale(1.1); }
+    66% { transform: translate(-30px, 30px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+  }
+  
+  .animate-blob {
+    animation: blob 8s infinite alternate;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f8fafc; /* Very light slate to let the pink/blue pop */
+  min-height: 100vh;
+  color: #0f172a;
+  overflow-x: hidden; /* Prevents scrolling sideways from the glowing orbs */
+}
