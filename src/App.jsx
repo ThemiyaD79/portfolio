@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Mail, 
   ExternalLink, 
@@ -41,10 +41,42 @@ const UpworkIcon = ({ className = "w-6 h-6" }) => (
   </svg>
 );
 
+// --- NEW: SCROLL REVEAL ANIMATION ENGINE ---
+const ScrollReveal = ({ children }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div 
+      ref={ref} 
+      className={`transition-all duration-1000 ease-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
+      }`}
+    >
+      {children}
+    </div>
+  );
+};
+
 // --- MOBILE-OPTIMIZED INTERACTIVE CARD ---
 const InteractiveCard = ({ children }) => {
   return (
-    <div className="group relative rounded-[2rem] bg-white/50 backdrop-blur-xl border border-white/80 p-6 md:p-8 transition-all duration-500 ease-out hover:bg-white/70 hover:scale-[1.02] hover:shadow-[0_20px_40px_-15px_rgba(236,72,153,0.3)] hover:border-pink-300 shadow-sm cursor-pointer overflow-hidden z-10">
+    <div className="group relative rounded-[2rem] bg-white/50 backdrop-blur-xl border border-white/80 p-6 md:p-8 transition-all duration-500 ease-out hover:bg-white/70 hover:scale-[1.02] hover:shadow-[0_20px_40px_-15px_rgba(236,72,153,0.3)] hover:border-pink-300 shadow-sm overflow-hidden z-10">
       <div className="absolute inset-0 bg-gradient-to-br from-pink-200/20 to-sky-200/20 opacity-30 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
       <div className="relative z-20">
         {children}
@@ -117,7 +149,7 @@ export default function App() {
   return (
     <div className="relative min-h-screen font-sans selection:bg-pink-200 selection:text-pink-900 bg-slate-50 overflow-x-hidden">
       
-      {/* --- FIXED MOBILE BACKGROUND ORBS --- */}
+      {/* FIXED MOBILE BACKGROUND ORBS */}
       <div className="fixed inset-0 w-full h-full z-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-5%] left-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-pink-300/40 rounded-full mix-blend-multiply blur-[80px] md:blur-[120px] animate-[pulse_8s_ease-in-out_infinite]"></div>
         <div className="absolute top-[20%] right-[-10%] w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-sky-300/50 rounded-full mix-blend-multiply blur-[80px] md:blur-[120px] animate-[pulse_10s_ease-in-out_infinite_reverse]"></div>
@@ -162,226 +194,216 @@ export default function App() {
 
       {/* HERO SECTION */}
       <section id="hero" className="pt-32 md:pt-40 pb-16 md:pb-20 px-6 max-w-6xl mx-auto flex flex-col items-start justify-center min-h-[85vh] relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md text-xs font-bold text-slate-700 mb-6 md:mb-8 border border-white/80 shadow-sm cursor-default">
-          <span className="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse"></span>
-          Available for Freelance & Collaborative Projects
-        </div>
-        
-        <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">
-          Software Engineer & <br />
-          <span className="bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 bg-clip-text text-transparent">
-            {typedText}<span className="animate-ping">|</span>
-          </span>
-        </h1>
-        
-        <p className="text-base md:text-xl text-slate-600 max-w-2xl mb-8 md:mb-10 leading-relaxed font-medium">
-          Building end-to-end digital solutions, relational database ecosystems, and interactive Power BI dashboards. Transforming operational workflows into clean, high-impact software.
-        </p>
-
-        <div className="flex flex-wrap gap-4 items-center w-full md:w-auto">
-          <a 
-            href="#projects" 
-            className="w-full md:w-auto text-center px-8 py-4 rounded-2xl bg-slate-900 hover:bg-pink-500 text-white font-bold shadow-xl hover:shadow-pink-500/30 transition-all duration-300 md:hover:-translate-y-1"
-          >
-            Explore Projects
-          </a>
-          
-          <div className="flex items-center gap-3 w-full md:w-auto justify-center md:justify-start md:ml-4 mt-4 md:mt-0">
-            <a 
-              href={MY_INFO.github} 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 text-slate-700 hover:bg-slate-900 hover:text-white md:hover:scale-110 md:hover:-translate-y-1 transition-all shadow-sm"
-            >
-              <GithubIcon className="w-6 h-6" />
-            </a>
-            <a 
-              href={MY_INFO.linkedin} 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 text-slate-700 hover:bg-[#0A66C2] hover:text-white md:hover:scale-110 md:hover:-translate-y-1 transition-all shadow-sm"
-            >
-              <LinkedinIcon className="w-6 h-6" />
-            </a>
-            {/* NEW UPWORK HEADER BUTTON */}
-            <a 
-              href={MY_INFO.upwork} 
-              target="_blank" 
-              rel="noreferrer"
-              className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 text-slate-700 hover:bg-[#14A800] hover:text-white md:hover:scale-110 md:hover:-translate-y-1 transition-all shadow-sm"
-            >
-              <UpworkIcon className="w-6 h-6" />
-            </a>
+        <ScrollReveal>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md text-xs font-bold text-slate-700 mb-6 md:mb-8 border border-white/80 shadow-sm">
+            <span className="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse"></span>
+            Available for Freelance & Collaborative Projects
           </div>
-        </div>
+          
+          <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">
+            Software Engineer & <br />
+            <span className="bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 bg-clip-text text-transparent">
+              {typedText}<span className="animate-ping">|</span>
+            </span>
+          </h1>
+          
+          <p className="text-base md:text-xl text-slate-600 max-w-2xl mb-8 md:mb-10 leading-relaxed font-medium">
+            Building end-to-end digital solutions, relational database ecosystems, and interactive Power BI dashboards. Transforming operational workflows into clean, high-impact software.
+          </p>
+
+          <div className="flex flex-wrap gap-4 items-center w-full md:w-auto">
+            <a 
+              href="#projects" 
+              className="w-full md:w-auto text-center px-8 py-4 rounded-2xl bg-slate-900 hover:bg-pink-500 text-white font-bold shadow-xl hover:shadow-pink-500/30 transition-all duration-300 md:hover:-translate-y-1"
+            >
+              Explore Projects
+            </a>
+            
+            <div className="flex items-center gap-3 w-full md:w-auto justify-center md:justify-start md:ml-4 mt-4 md:mt-0">
+              <a href={MY_INFO.github} target="_blank" rel="noreferrer" className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 text-slate-700 hover:bg-slate-900 hover:text-white md:hover:scale-110 md:hover:-translate-y-1 transition-all shadow-sm">
+                <GithubIcon className="w-6 h-6" />
+              </a>
+              <a href={MY_INFO.linkedin} target="_blank" rel="noreferrer" className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 text-slate-700 hover:bg-[#0A66C2] hover:text-white md:hover:scale-110 md:hover:-translate-y-1 transition-all shadow-sm">
+                <LinkedinIcon className="w-6 h-6" />
+              </a>
+              <a href={MY_INFO.upwork} target="_blank" rel="noreferrer" className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 text-slate-700 hover:bg-[#14A800] hover:text-white md:hover:scale-110 md:hover:-translate-y-1 transition-all shadow-sm">
+                <UpworkIcon className="w-6 h-6" />
+              </a>
+            </div>
+          </div>
+        </ScrollReveal>
       </section>
 
       {/* ABOUT SECTION */}
       <section id="about" className="py-16 md:py-24 px-6 max-w-6xl mx-auto relative z-10">
-        <InteractiveCard>
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 text-pink-500 font-bold text-sm uppercase tracking-wider mb-4">
-              <User size={18} /> About Me
+        <ScrollReveal>
+          <InteractiveCard>
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 text-pink-500 font-bold text-sm uppercase tracking-wider mb-4">
+                <User size={18} /> About Me
+              </div>
+              <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 mb-6 leading-snug">
+                Engineering functional solutions with data-driven precision.
+              </h2>
+              <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-4">
+                I hold a Higher Diploma in Computing & Software Engineering from Cardiff Metropolitan University (ICBT Campus). My work spans software development, database administration, and business analytics.
+              </p>
+              <p className="text-slate-600 text-base md:text-lg leading-relaxed">
+                Whether analyzing manual operational workflows, constructing C# and ASP.NET backends, or crafting interactive visual dashboards in Power BI and React, my focus is delivering secure, clear, and scalable applications.
+              </p>
             </div>
-            <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 mb-6 leading-snug">
-              Engineering functional solutions with data-driven precision.
-            </h2>
-            <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-4">
-              I hold a Higher Diploma in Computing & Software Engineering from Cardiff Metropolitan University (ICBT Campus). My work spans software development, database administration, and business analytics.
-            </p>
-            <p className="text-slate-600 text-base md:text-lg leading-relaxed">
-              Whether analyzing manual operational workflows, constructing C# and ASP.NET backends, or crafting interactive visual dashboards in Power BI and React, my focus is delivering secure, clear, and scalable applications.
-            </p>
-          </div>
-        </InteractiveCard>
+          </InteractiveCard>
+        </ScrollReveal>
       </section>
 
       {/* EXPERIENCE SECTION */}
       <section id="experience" className="py-16 md:py-24 px-6 max-w-6xl mx-auto relative z-10">
-        <div className="inline-flex items-center gap-2 text-pink-500 font-bold text-sm uppercase tracking-wider mb-4">
-          <Briefcase size={18} /> Work History
-        </div>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-8 md:mb-12">Professional Experience</h2>
+        <ScrollReveal>
+          <div className="inline-flex items-center gap-2 text-pink-500 font-bold text-sm uppercase tracking-wider mb-4">
+            <Briefcase size={18} /> Work History
+          </div>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-8 md:mb-12">Professional Experience</h2>
+        </ScrollReveal>
 
         <div className="grid gap-6 md:gap-8">
-          <InteractiveCard>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6">
-              <div>
-                <h3 className="text-xl md:text-2xl font-extrabold text-slate-900">Information Technology Intern (Data Analytics)</h3>
-                <p className="text-sky-600 font-bold text-base md:text-lg mt-1">United Tobacco Processing SL (UTP SL)</p>
+          <ScrollReveal>
+            <InteractiveCard>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6">
+                <div>
+                  <h3 className="text-xl md:text-2xl font-extrabold text-slate-900">Information Technology Intern (Data Analytics)</h3>
+                  <p className="text-sky-600 font-bold text-base md:text-lg mt-1">United Tobacco Processing SL (UTP SL)</p>
+                </div>
+                <span className="px-4 py-2 rounded-full text-xs md:text-sm font-bold bg-pink-100 text-pink-700 border border-pink-200 self-start md:self-auto shadow-sm">
+                  Present / Ongoing
+                </span>
               </div>
-              <span className="px-4 py-2 rounded-full text-xs md:text-sm font-bold bg-pink-100 text-pink-700 border border-pink-200 self-start md:self-auto shadow-sm">
-                Present / Ongoing
-              </span>
-            </div>
-            <ul className="list-disc list-inside text-slate-600 space-y-2 md:space-y-3 text-base md:text-lg">
-              <li>Building interactive enterprise dashboards using Microsoft Power BI to deliver operational insights.</li>
-              <li>Managing data cleaning, ETL pipelines, and data validation across relational sources.</li>
-              <li>Translating business reporting requirements into functional data metrics and process flows.</li>
-            </ul>
-          </InteractiveCard>
+              <ul className="list-disc list-inside text-slate-600 space-y-2 md:space-y-3 text-base md:text-lg">
+                <li>Building interactive enterprise dashboards using Microsoft Power BI to deliver operational insights.</li>
+                <li>Managing data cleaning, ETL pipelines, and data validation across relational sources.</li>
+                <li>Translating business reporting requirements into functional data metrics and process flows.</li>
+              </ul>
+            </InteractiveCard>
+          </ScrollReveal>
 
-          <InteractiveCard>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6">
-              <div>
-                <h3 className="text-xl md:text-2xl font-extrabold text-slate-900">Freelance Full Stack Developer & Database Engineer</h3>
-                <p className="text-sky-600 font-bold text-base md:text-lg mt-1">StackNet (Pvt) Ltd</p>
+          <ScrollReveal>
+            <InteractiveCard>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6">
+                <div>
+                  <h3 className="text-xl md:text-2xl font-extrabold text-slate-900">Freelance Full Stack Developer & Database Engineer</h3>
+                  <p className="text-sky-600 font-bold text-base md:text-lg mt-1">StackNet (Pvt) Ltd</p>
+                </div>
+                <span className="text-xs md:text-sm font-bold text-slate-500 bg-white/60 px-4 py-2 rounded-full border border-white/80 self-start md:self-auto shadow-sm">
+                  Project-Based (2026)
+                </span>
               </div>
-              <span className="text-xs md:text-sm font-bold text-slate-500 bg-white/60 px-4 py-2 rounded-full border border-white/80 self-start md:self-auto shadow-sm">
-                Project-Based (2026)
-              </span>
-            </div>
-            <ul className="list-disc list-inside text-slate-600 space-y-2 md:space-y-3 text-base md:text-lg">
-              <li>Developed responsive ASP.NET WebForms interfaces with C# backends for inventory management modules.</li>
-              <li>Structured relational database schemas from scratch, optimizing SQL queries for reporting.</li>
-              <li>Managed technical requirement backlog and sprint deliverables through Jira.</li>
-            </ul>
-          </InteractiveCard>
+              <ul className="list-disc list-inside text-slate-600 space-y-2 md:space-y-3 text-base md:text-lg">
+                <li>Developed responsive ASP.NET WebForms interfaces with C# backends for inventory management modules.</li>
+                <li>Structured relational database schemas from scratch, optimizing SQL queries for reporting.</li>
+                <li>Managed technical requirement backlog and sprint deliverables through Jira.</li>
+              </ul>
+            </InteractiveCard>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* PROJECTS SECTION */}
       <section id="projects" className="py-16 md:py-24 px-6 max-w-6xl mx-auto relative z-10">
-        <div className="inline-flex items-center gap-2 text-pink-500 font-bold text-sm uppercase tracking-wider mb-4">
-          <FolderGit2 size={18} /> Selected Work
-        </div>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-8 md:mb-12">GitHub Repositories & Solutions</h2>
+        <ScrollReveal>
+          <div className="inline-flex items-center gap-2 text-pink-500 font-bold text-sm uppercase tracking-wider mb-4">
+            <FolderGit2 size={18} /> Selected Work
+          </div>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-8 md:mb-12">GitHub Repositories & Solutions</h2>
+        </ScrollReveal>
 
         <div className="grid md:grid-cols-2 gap-6 md:gap-8">
           {projects.map((proj, idx) => (
-            <InteractiveCard key={idx}>
-              <div className="flex flex-col h-full justify-between">
-                <div>
-                  <span className="text-xs md:text-sm font-black uppercase tracking-wider text-pink-500 mb-3 block">{proj.category}</span>
-                  <h3 className="text-xl md:text-2xl font-extrabold text-slate-900 mb-4">{proj.title}</h3>
-                  <p className="text-slate-600 text-base md:text-lg mb-8 leading-relaxed">{proj.description}</p>
-                </div>
-
-                <div>
-                  <div className="flex flex-wrap gap-2 mb-6 md:mb-8">
-                    {proj.tech.map((t, i) => (
-                      <span key={i} className="text-xs md:text-sm px-3 py-1.5 rounded-lg bg-white/70 text-slate-800 border border-white/80 font-bold shadow-sm">
-                        {t}
-                      </span>
-                    ))}
+            <ScrollReveal key={idx}>
+              <InteractiveCard>
+                <div className="flex flex-col h-full justify-between">
+                  <div>
+                    <span className="text-xs md:text-sm font-black uppercase tracking-wider text-pink-500 mb-3 block">{proj.category}</span>
+                    <h3 className="text-xl md:text-2xl font-extrabold text-slate-900 mb-4">{proj.title}</h3>
+                    <p className="text-slate-600 text-base md:text-lg mb-8 leading-relaxed">{proj.description}</p>
                   </div>
 
-                  <a 
-                    href={proj.github} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 font-bold text-sky-600 hover:text-pink-500 transition-colors group/link"
-                  >
-                    <GithubIcon className="w-5 h-5 md:group-hover/link:scale-110 transition-transform" /> 
-                    View Code on GitHub 
-                    <ExternalLink size={16} className="md:group-hover/link:translate-x-1 transition-transform" />
-                  </a>
+                  <div>
+                    <div className="flex flex-wrap gap-2 mb-6 md:mb-8">
+                      {proj.tech.map((t, i) => (
+                        <span key={i} className="text-xs md:text-sm px-3 py-1.5 rounded-lg bg-white/70 text-slate-800 border border-white/80 font-bold shadow-sm">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    <a 
+                      href={proj.github} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 font-bold text-sky-600 hover:text-pink-500 transition-colors group/link"
+                    >
+                      <GithubIcon className="w-5 h-5 md:group-hover/link:scale-110 transition-transform" /> 
+                      View Code on GitHub 
+                      <ExternalLink size={16} className="md:group-hover/link:translate-x-1 transition-transform" />
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </InteractiveCard>
+              </InteractiveCard>
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
       {/* SKILLS SECTION */}
       <section id="skills" className="py-16 md:py-24 px-6 max-w-6xl mx-auto relative z-10">
-        <div className="inline-flex items-center gap-2 text-pink-500 font-bold text-sm uppercase tracking-wider mb-4">
-          <Code2 size={18} /> Tech Stack
-        </div>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-8 md:mb-12">Skills & Competencies</h2>
+        <ScrollReveal>
+          <div className="inline-flex items-center gap-2 text-pink-500 font-bold text-sm uppercase tracking-wider mb-4">
+            <Code2 size={18} /> Tech Stack
+          </div>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-8 md:mb-12">Skills & Competencies</h2>
+        </ScrollReveal>
 
         <div className="grid md:grid-cols-3 gap-6 md:gap-8">
           {skills.map((group, idx) => (
-            <InteractiveCard key={idx}>
-              <h3 className="text-lg md:text-xl font-extrabold text-slate-900 mb-5 pb-4 border-b border-white/60">{group.category}</h3>
-              <div className="flex flex-wrap gap-2 md:gap-3">
-                {group.items.map((item, i) => (
-                  <span key={i} className="px-3 md:px-4 py-2 rounded-xl bg-white/70 text-xs md:text-sm font-bold text-slate-800 border border-white/80 shadow-sm md:hover:scale-110 md:hover:bg-pink-100 hover:text-pink-700 transition-all cursor-default">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </InteractiveCard>
+            <ScrollReveal key={idx}>
+              <InteractiveCard>
+                <h3 className="text-lg md:text-xl font-extrabold text-slate-900 mb-5 pb-4 border-b border-white/60">{group.category}</h3>
+                <div className="flex flex-wrap gap-2 md:gap-3">
+                  {group.items.map((item, i) => (
+                    <span key={i} className="px-3 md:px-4 py-2 rounded-xl bg-white/70 text-xs md:text-sm font-bold text-slate-800 border border-white/80 shadow-sm md:hover:scale-110 md:hover:bg-pink-100 hover:text-pink-700 transition-all cursor-default">
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </InteractiveCard>
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
       {/* CONTACT SECTION */}
       <section id="contact" className="py-16 md:py-24 px-6 max-w-6xl mx-auto relative z-10">
-        <InteractiveCard>
-          <div className="text-center py-4 md:py-6">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 md:mb-6">Let's Work Together</h2>
-            <p className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto mb-8 md:mb-10">
-              Whether you are looking to build a desktop management system, clean complex data structures, or develop responsive web platforms, let's connect!
-            </p>
+        <ScrollReveal>
+          <InteractiveCard>
+            <div className="text-center py-4 md:py-6">
+              <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 md:mb-6">Let's Work Together</h2>
+              <p className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto mb-8 md:mb-10">
+                Whether you are looking to build a desktop management system, clean complex data structures, or develop responsive web platforms, let's connect!
+              </p>
 
-            <div className="flex flex-col md:flex-row flex-wrap justify-center gap-4 md:gap-6">
-              <a 
-                href={`mailto:${MY_INFO.email}`} 
-                className="inline-flex items-center justify-center gap-3 px-6 md:px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-pink-500 hover:from-sky-400 hover:to-pink-400 text-white font-bold shadow-xl hover:shadow-pink-500/40 transition-all md:hover:-translate-y-1 md:hover:scale-105"
-              >
-                <Mail size={20} /> {MY_INFO.email}
-              </a>
-              <a 
-                href={MY_INFO.linkedin}
-                target="_blank" 
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-3 px-6 md:px-8 py-4 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 font-bold transition-all hover:bg-white hover:text-[#0A66C2] md:hover:-translate-y-1 md:hover:scale-105 shadow-sm hover:shadow-lg"
-              >
-                <LinkedinIcon className="w-5 h-5" /> Connect on LinkedIn
-              </a>
-              {/* NEW UPWORK FOOTER BUTTON */}
-              <a 
-                href={MY_INFO.upwork}
-                target="_blank" 
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-3 px-6 md:px-8 py-4 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 font-bold transition-all hover:bg-white hover:text-[#14A800] md:hover:-translate-y-1 md:hover:scale-105 shadow-sm hover:shadow-lg"
-              >
-                <UpworkIcon className="w-5 h-5" /> Hire on Upwork
-              </a>
+              <div className="flex flex-col md:flex-row flex-wrap justify-center gap-4 md:gap-6">
+                <a href={`mailto:${MY_INFO.email}`} className="inline-flex items-center justify-center gap-3 px-6 md:px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-pink-500 hover:from-sky-400 hover:to-pink-400 text-white font-bold shadow-xl hover:shadow-pink-500/40 transition-all md:hover:-translate-y-1 md:hover:scale-105">
+                  <Mail size={20} /> {MY_INFO.email}
+                </a>
+                <a href={MY_INFO.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-3 px-6 md:px-8 py-4 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 font-bold transition-all hover:bg-white hover:text-[#0A66C2] md:hover:-translate-y-1 md:hover:scale-105 shadow-sm hover:shadow-lg">
+                  <LinkedinIcon className="w-5 h-5" /> Connect on LinkedIn
+                </a>
+                <a href={MY_INFO.upwork} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-3 px-6 md:px-8 py-4 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-slate-900 font-bold transition-all hover:bg-white hover:text-[#14A800] md:hover:-translate-y-1 md:hover:scale-105 shadow-sm hover:shadow-lg">
+                  <UpworkIcon className="w-5 h-5" /> Hire on Upwork
+                </a>
+              </div>
             </div>
-          </div>
-        </InteractiveCard>
+          </InteractiveCard>
+        </ScrollReveal>
       </section>
 
       {/* FOOTER */}
