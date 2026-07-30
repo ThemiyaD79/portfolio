@@ -9,7 +9,8 @@ import {
   Clock,
   Palette,
   GraduationCap,
-  Smile
+  Smile,
+  ChevronDown
 } from 'lucide-react';
 
 // ==========================================
@@ -46,19 +47,19 @@ const UpworkIcon = ({ className = "w-5 h-5" }) => (
 // --- ARCADE DARK MODE GAME PREVIEW ---
 const FrogGameVisual = () => {
   return (
-    <div className="relative w-full h-40 bg-slate-900 rounded-xl overflow-hidden border border-white/10 mb-6 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
+    <div className="relative w-full h-32 md:h-40 bg-slate-900 rounded-xl overflow-hidden border border-white/10 mb-4 md:mb-6 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
       <style>{`
         @keyframes scrollGround { 0% { background-position: 0px 0; } 100% { background-position: -40px 0; } }
-        @keyframes hop { 0%, 100% { transform: translateY(0) scaleY(0.9); } 50% { transform: translateY(-40px) scaleY(1.05); } }
+        @keyframes hop { 0%, 100% { transform: translateY(0) scaleY(0.9); } 50% { transform: translateY(-30px) scaleY(1.05); } }
         @keyframes slideLeftFast { 0% { transform: translateX(300px); } 100% { transform: translateX(-100px); } }
       `}</style>
-      <div className="absolute top-4 right-10 text-2xl animate-pulse drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">📦</div>
-      <div className="absolute bottom-0 w-full h-10 bg-slate-950 border-t-2 border-cyan-500 shadow-[0_-5px_15px_rgba(6,182,212,0.3)]"
+      <div className="absolute top-2 right-10 text-xl md:text-2xl animate-pulse drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">📦</div>
+      <div className="absolute bottom-0 w-full h-8 md:h-10 bg-slate-950 border-t-2 border-cyan-500 shadow-[0_-5px_15px_rgba(6,182,212,0.3)]"
         style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(6,182,212,0.1) 20px, rgba(6,182,212,0.1) 21px)', animation: 'scrollGround 1.5s linear infinite' }}>
       </div>
-      <div className="absolute bottom-10 w-6 h-10 bg-slate-800 border-2 border-pink-500 rounded-t-sm shadow-[0_0_10px_rgba(236,72,153,0.5)]" style={{ animation: 'slideLeftFast 3s linear infinite' }}></div>
-      <div className="absolute bottom-10 left-1/4 z-10 drop-shadow-[0_0_8px_rgba(34,197,94,0.6)]" style={{ animation: 'hop 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite' }}>
-        <svg width="32" height="32" viewBox="0 0 16 16" style={{ imageRendering: 'pixelated' }}>
+      <div className="absolute bottom-8 md:bottom-10 w-6 h-8 md:h-10 bg-slate-800 border-2 border-pink-500 rounded-t-sm shadow-[0_0_10px_rgba(236,72,153,0.5)]" style={{ animation: 'slideLeftFast 3s linear infinite' }}></div>
+      <div className="absolute bottom-8 md:bottom-10 left-1/4 z-10 drop-shadow-[0_0_8px_rgba(34,197,94,0.6)]" style={{ animation: 'hop 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite' }}>
+        <svg width="24" height="24" viewBox="0 0 16 16" style={{ imageRendering: 'pixelated' }}>
           <path fill="#22c55e" d="M4,4 h2 v-2 h-2 z M10,4 h2 v-2 h-2 z M2,6 h2 v-2 h-2 z M12,6 h2 v-2 h-2 z M4,8 h8 v-2 h-8 z M2,10 h12 v-2 h-12 z M2,12 h12 v-2 h-12 z M2,14 h3 v-2 h-3 z M11,14 h3 v-2 h-3 z" />
           <path fill="#020617" d="M3,5 h1 v1 h-1 z M12,5 h1 v1 h-1 z" />
           <path fill="#86efac" d="M5,12 h6 v-2 h-6 z" />
@@ -73,8 +74,12 @@ export default function App() {
   const [bgColor, setBgColor] = useState(BACKGROUND_OPTIONS[0].class);
   const [activeProject, setActiveProject] = useState(0); 
   
+  // New States for Intro and Robot
+  const [introStage, setIntroStage] = useState('welcome'); // 'welcome' -> 'hi' -> 'done'
+  const [globalScroll, setGlobalScroll] = useState(0);
+
   const scrollContainerRef = useRef(null);
-  const cursorRef = useRef(null); // Ref for custom neon cursor
+  const cursorRef = useRef(null);
 
   const projects = [
     {
@@ -120,7 +125,10 @@ export default function App() {
   ];
 
   useEffect(() => {
-    // Clock Logic
+    // Welcome Presentation Animation Logic
+    const t1 = setTimeout(() => setIntroStage('hi'), 1500);
+    const t2 = setTimeout(() => setIntroStage('done'), 3200);
+
     const updateClock = () => {
       const now = new Date();
       setTime(now.toLocaleTimeString('en-US', { hour12: true, hour: 'numeric', minute: '2-digit', second: '2-digit' }));
@@ -128,30 +136,37 @@ export default function App() {
     updateClock();
     const timer = setInterval(updateClock, 1000);
 
-    // Sticky Scroll Logic
     const handleScroll = () => {
-      if (!scrollContainerRef.current) return;
-      const rect = scrollContainerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const stickyOffset = 96;
-      
-      const scrollDistance = stickyOffset - rect.top; 
-      const maxScroll = rect.height - windowHeight;
-      
-      if (scrollDistance >= 0 && scrollDistance <= maxScroll) {
-        const progress = scrollDistance / maxScroll;
-        const projectIndex = Math.min(Math.floor(progress * projects.length), projects.length - 1);
-        setActiveProject(projectIndex);
-      } else if (scrollDistance < 0) {
-        setActiveProject(0);
-      } else if (scrollDistance > maxScroll) {
-        setActiveProject(projects.length - 1); 
+      // 1. Calculate overall page scroll for the Robot
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      setGlobalScroll(scrolled);
+
+      // 2. Desktop-Only Sticky Project Logic
+      // Mobile screens (< 1024px) ignore the sticky logic to prevent bugs.
+      if (window.innerWidth >= 1024 && scrollContainerRef.current) {
+        const rect = scrollContainerRef.current.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        const stickyOffset = 96; 
+        
+        const scrollDistance = stickyOffset - rect.top; 
+        const maxScroll = rect.height - windowHeight;
+        
+        if (scrollDistance >= 0 && scrollDistance <= maxScroll) {
+          const progress = scrollDistance / maxScroll;
+          const projectIndex = Math.min(Math.floor(progress * projects.length), projects.length - 1);
+          setActiveProject(projectIndex);
+        } else if (scrollDistance < 0) {
+          setActiveProject(0);
+        } else if (scrollDistance > maxScroll) {
+          setActiveProject(projects.length - 1); 
+        }
       }
     };
 
-    // Custom Neon Cursor Logic (Highly Optimized)
     const handleMouseMove = (e) => {
-      if (cursorRef.current) {
+      if (cursorRef.current && window.innerWidth >= 1024) {
         cursorRef.current.style.left = `${e.clientX}px`;
         cursorRef.current.style.top = `${e.clientY}px`;
       }
@@ -162,6 +177,8 @@ export default function App() {
     handleScroll();
 
     return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
       clearInterval(timer);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
@@ -177,7 +194,21 @@ export default function App() {
   return (
     <div className={`flex flex-col lg:flex-row min-h-screen text-slate-300 font-sans selection:bg-pink-500/30 selection:text-pink-200 relative transition-colors duration-700 ${bgColor}`}>
       
-      {/* --- CSS INJECTIONS & WHITE THEME OVERRIDES --- */}
+      {/* ==========================================
+          WELCOME INTRO ANIMATION PRELOADER
+      ========================================== */}
+      <div className={`fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950 transition-opacity duration-1000 ease-in-out ${introStage === 'done' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className="relative flex items-center justify-center">
+          <h1 className={`text-4xl md:text-7xl font-black text-white absolute transition-all duration-700 transform ${introStage === 'welcome' ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-110 -translate-y-10'}`}>
+            Welcome.
+          </h1>
+          <h1 className={`text-4xl md:text-7xl font-black bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent absolute transition-all duration-700 transform ${introStage === 'hi' ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-10'}`}>
+            Hi, I'm Themiya.
+          </h1>
+        </div>
+      </div>
+
+      {/* --- CSS INJECTIONS & THEME OVERRIDES --- */}
       <style>{`
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
@@ -228,6 +259,21 @@ export default function App() {
       `}</style>
 
       {/* ==========================================
+          SCROLLING ROBOT COMPANION
+      ========================================== */}
+      {/* Neon Laser Wire Track */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500/20 via-cyan-500/40 to-pink-500/20 z-[90]"></div>
+      {/* The Robot */}
+      <div 
+        className="fixed top-0 left-0 z-[100] mt-1 transition-transform duration-75 ease-out pointer-events-none"
+        style={{ transform: `translateX(calc(${globalScroll}vw - ${globalScroll > 50 ? '30px' : '0px'}))` }}
+      >
+        <div className="relative animate-bounce drop-shadow-[0_0_10px_rgba(6,182,212,0.8)] text-2xl md:text-3xl">
+          🤖
+        </div>
+      </div>
+
+      {/* ==========================================
           THE CUSTOM NEON CURSOR
       ========================================== */}
       <div ref={cursorRef} className="neon-cursor hidden lg:block"></div>
@@ -243,15 +289,15 @@ export default function App() {
       {/* ==========================================
           THEME SWITCHER
       ========================================== */}
-      <div className="fixed top-6 right-6 z-50 flex items-center gap-3 p-2 px-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full shadow-lg">
-        <Palette size={16} className="text-slate-400" />
-        <div className="w-px h-4 bg-white/20"></div>
+      <div className="fixed top-6 right-4 md:right-6 z-50 flex items-center gap-2 md:gap-3 p-2 px-3 md:px-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full shadow-lg">
+        <Palette size={16} className="text-slate-400 hidden md:block" />
+        <div className="w-px h-4 bg-white/20 hidden md:block"></div>
         <div className="flex gap-2">
           {BACKGROUND_OPTIONS.map((bg) => (
             <button
               key={bg.id}
               onClick={() => setBgColor(bg.class)}
-              className={`w-5 h-5 rounded-full ${bg.class === 'bg-frost' ? 'bg-slate-100' : bg.class} border-2 transition-all duration-300 hover:scale-125 ${bgColor === bg.class ? bg.border : 'border-transparent'}`}
+              className={`w-4 h-4 md:w-5 md:h-5 rounded-full ${bg.class === 'bg-frost' ? 'bg-slate-100' : bg.class} border-2 transition-all duration-300 hover:scale-125 ${bgColor === bg.class ? bg.border : 'border-transparent'}`}
               title={`Switch to ${bg.id} theme`}
             />
           ))}
@@ -259,12 +305,12 @@ export default function App() {
       </div>
 
       {/* ==========================================
-          LEFT PANEL: FIXED IDENTITY (Humanized Bio)
+          LEFT PANEL: MOBILE OPTIMIZED
       ========================================== */}
-      <aside className="w-full lg:w-[420px] xl:w-[480px] lg:fixed lg:h-screen bg-black/20 backdrop-blur-3xl border-b lg:border-b-0 lg:border-r border-white/5 p-8 md:p-12 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.5)] overflow-y-auto hide-scroll flex flex-col">
+      <aside className="w-full lg:w-[420px] xl:w-[480px] min-h-screen lg:fixed lg:h-screen bg-black/20 backdrop-blur-3xl border-b lg:border-b-0 lg:border-r border-white/5 p-6 md:p-12 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.5)] flex flex-col justify-center lg:justify-start overflow-y-auto hide-scroll relative">
         
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs font-bold text-cyan-400 mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs font-bold text-cyan-400 mb-6 md:mb-8 mt-10 lg:mt-0">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,1)]"></span>
             System Online / Available
           </div>
@@ -272,15 +318,15 @@ export default function App() {
           <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-2 leading-tight">
             {MY_INFO.name}
           </h1>
-          <h2 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent mb-6">
+          <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent mb-6">
             {MY_INFO.title}
           </h2>
           
-          <div className="text-slate-300 text-sm leading-relaxed mb-10 space-y-4">
+          <div className="text-slate-300 text-sm md:text-base leading-relaxed mb-10 space-y-4">
             <p>
               I build software and data solutions that actually solve problems. Whether it's replacing clunky manual workflows with clean desktop apps, writing complex SQL databases, or building interactive Power BI dashboards, I focus on making things functional, unique, and genuinely easy for people to use.
             </p>
-            <p className="flex items-start gap-2 text-slate-400 font-medium">
+            <p className="flex items-start gap-2 text-slate-400 font-medium text-sm">
               <GraduationCap className="text-pink-500 shrink-0 mt-0.5" size={16} />
               Holding a Higher Diploma in Computing & Software Engineering from Cardiff Metropolitan University (ICBT Campus).
             </p>
@@ -305,12 +351,12 @@ export default function App() {
           </nav>
         </div>
 
-        <div id="connect" className="mt-auto flex flex-col gap-3 relative z-30">
-          <a href={`mailto:${MY_INFO.email}`} className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-pink-500/20 hover:border-pink-500/50 hover:shadow-[0_0_20px_rgba(236,72,153,0.2)] transition-all group font-medium">
+        <div id="connect" className="mt-8 lg:mt-auto flex flex-col gap-3 relative z-30 pb-10 lg:pb-0">
+          <a href={`mailto:${MY_INFO.email}`} className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-pink-500/20 hover:border-pink-500/50 hover:shadow-[0_0_20px_rgba(236,72,153,0.2)] transition-all group font-medium text-sm md:text-base">
             <div className="p-2 bg-white/10 rounded-lg group-hover:text-pink-400 transition-colors"><Mail size={18} /></div>
             {MY_INFO.email}
           </a>
-          <a href={MY_INFO.upwork} target="_blank" rel="noreferrer" className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-[#14A800]/20 hover:border-[#14A800]/50 hover:shadow-[0_0_20px_rgba(20,168,0,0.2)] transition-all group font-medium">
+          <a href={MY_INFO.upwork} target="_blank" rel="noreferrer" className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-[#14A800]/20 hover:border-[#14A800]/50 hover:shadow-[0_0_20px_rgba(20,168,0,0.2)] transition-all group font-medium text-sm md:text-base">
             <div className="p-2 bg-white/10 rounded-lg group-hover:text-[#14A800] transition-colors"><UpworkIcon className="w-4 h-4" /></div>
             Hire on Upwork
           </a>
@@ -330,16 +376,22 @@ export default function App() {
             </p>
           </div>
         </div>
+
+        {/* Mobile Scroll Indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-slate-500 lg:hidden animate-bounce opacity-70">
+          <span className="text-[10px] font-bold uppercase tracking-widest">Scroll</span>
+          <ChevronDown size={16} />
+        </div>
       </aside>
 
       {/* ==========================================
           RIGHT PANEL: SCROLLABLE CANVAS
       ========================================== */}
-      <main className="flex-1 lg:ml-[420px] xl:ml-[480px] relative z-10">
-        <div className="max-w-5xl mx-auto p-6 md:p-12 lg:p-16 xl:p-24 pt-24 lg:pt-16">
+      <main className="flex-1 lg:ml-[420px] xl:ml-[480px] relative z-10 hide-scroll">
+        <div className="max-w-5xl mx-auto p-6 md:p-12 lg:p-16 xl:p-24 pt-16 md:pt-24 lg:pt-16">
 
           {/* --- DATA DASHBOARD HERO --- */}
-          <section id="dashboard" className="mb-24">
+          <section id="dashboard" className="mb-16 md:mb-24">
             <div className="flex items-center gap-2 text-xs font-bold text-pink-500 uppercase tracking-widest mb-6">
               <Terminal size={14} /> System Overview
             </div>
@@ -347,43 +399,45 @@ export default function App() {
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl hover:border-cyan-500/30 transition-colors">
                 <div className="text-cyan-500 mb-4"><MapPin size={20} /></div>
                 <div className="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider">Current Node Server</div>
-                <div className="text-xl font-black text-white mb-1">Negombo, Sri Lanka</div>
-                <div className="text-pink-400 font-mono text-sm flex items-center gap-2"><Clock size={14} /> {time}</div>
+                <div className="text-lg md:text-xl font-black text-white mb-1">Negombo, Sri Lanka</div>
+                <div className="text-pink-400 font-mono text-xs md:text-sm flex items-center gap-2"><Clock size={14} /> {time}</div>
               </div>
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl hover:border-cyan-500/30 transition-colors">
                 <div className="text-cyan-500 mb-4"><Code2 size={20} /></div>
                 <div className="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider">Core Architecture</div>
-                <div className="text-xl font-black text-white mb-1">.NET & Data BI</div>
-                <div className="text-pink-400 font-mono text-sm">C# / SQL / Power BI</div>
+                <div className="text-lg md:text-xl font-black text-white mb-1">.NET & Data BI</div>
+                <div className="text-pink-400 font-mono text-xs md:text-sm">C# / SQL / Power BI</div>
               </div>
             </div>
           </section>
 
           {/* --- EXPERIENCE --- */}
-          <section id="experience" className="mb-24">
+          <section id="experience" className="mb-16 md:mb-24">
             <h3 className="text-2xl font-black text-white mb-8 border-b border-white/10 pb-4">Professional History</h3>
-            <div className="relative border-l border-white/10 pl-8 pb-12">
+            <div className="relative border-l border-white/10 pl-6 md:pl-8 pb-10 md:pb-12">
               <div className="absolute w-3 h-3 bg-pink-500 rounded-full -left-[6.5px] top-1.5 shadow-[0_0_10px_rgba(236,72,153,0.8)]"></div>
               <span className="text-xs font-bold text-pink-400 uppercase tracking-widest mb-2 block">Present</span>
-              <h4 className="text-xl font-bold text-white">IT Intern (Data Analytics)</h4>
-              <p className="text-cyan-400 font-medium mb-4">United Tobacco Processing SL</p>
-              <p className="text-slate-400 leading-relaxed">Building interactive enterprise dashboards using Microsoft Power BI. Managing data cleaning, ETL pipelines, and validation across relational sources to translate business reporting requirements into functional metrics.</p>
+              <h4 className="text-lg md:text-xl font-bold text-white">IT Intern (Data Analytics)</h4>
+              <p className="text-cyan-400 text-sm md:text-base font-medium mb-4">United Tobacco Processing SL</p>
+              <p className="text-slate-400 text-sm md:text-base leading-relaxed">Building interactive enterprise dashboards using Microsoft Power BI. Managing data cleaning, ETL pipelines, and validation across relational sources to translate business reporting requirements into functional metrics.</p>
             </div>
-            <div className="relative border-l border-white/10 pl-8">
+            <div className="relative border-l border-white/10 pl-6 md:pl-8">
               <div className="absolute w-3 h-3 bg-slate-700 rounded-full -left-[6.5px] top-1.5"></div>
               <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">2026 (Project)</span>
-              <h4 className="text-xl font-bold text-white">Full Stack Developer</h4>
-              <p className="text-slate-300 font-medium mb-4">StackNet (Pvt) Ltd</p>
-              <p className="text-slate-400 leading-relaxed">Developed ASP.NET WebForms interfaces with C# backends. Structured relational database schemas from scratch and optimized SQL queries for inventory management reporting.</p>
+              <h4 className="text-lg md:text-xl font-bold text-white">Full Stack Developer</h4>
+              <p className="text-slate-300 text-sm md:text-base font-medium mb-4">StackNet (Pvt) Ltd</p>
+              <p className="text-slate-400 text-sm md:text-base leading-relaxed">Developed ASP.NET WebForms interfaces with C# backends. Structured relational database schemas from scratch and optimized SQL queries for inventory management reporting.</p>
             </div>
           </section>
 
-          {/* --- MATHEMATICAL STICKY-SCROLL ACCORDION --- */}
-          <section id="projects" ref={scrollContainerRef} className="relative h-[200vh] mb-24">
-            <div className="sticky top-24 z-10 pt-4">
+          {/* --- RESPONSIVE PROJECT ACCORDION --- */}
+          {/* Desktop = Sticky Scroll Container (lg:h-[200vh]). Mobile = Natural flow Tap-to-Expand (h-auto) */}
+          <section id="projects" ref={scrollContainerRef} className="relative h-auto lg:h-[200vh] mb-16 md:mb-24">
+            <div className="lg:sticky lg:top-24 z-10 lg:pt-4">
               <h3 className="text-2xl font-black text-white mb-8 border-b border-white/10 pb-4">System Architecture</h3>
               
-              <div className="flex flex-col lg:flex-row gap-4 h-[700px] lg:h-[500px] w-full">
+              {/* Flex changes from Column on Mobile to Row on Desktop */}
+              <div className="flex flex-col lg:flex-row gap-4 lg:h-[500px] w-full">
                 {projects.map((proj, idx) => {
                   const isActive = activeProject === idx;
                   return (
@@ -391,36 +445,36 @@ export default function App() {
                       key={idx} 
                       onClick={() => setActiveProject(idx)}
                       className={`relative overflow-hidden rounded-3xl transition-all duration-700 ease-in-out cursor-pointer border border-white/10 backdrop-blur-sm
-                        ${isActive ? 'lg:w-[60%] h-[400px] lg:h-full bg-white/10 shadow-[0_0_30px_rgba(6,182,212,0.15)]' : 'lg:w-[10%] h-16 lg:h-full bg-white/5 hover:bg-white/10 opacity-60'}
+                        ${isActive ? 'w-full lg:w-[60%] flex-1 lg:h-full bg-white/10 shadow-[0_0_30px_rgba(6,182,212,0.15)] min-h-[400px] lg:min-h-0' : 'w-full lg:w-[10%] h-16 lg:h-full bg-white/5 hover:bg-white/10 opacity-80 lg:opacity-60'}
                       `}
                     >
                       {/* Collapsed State Content */}
-                      <div className={`absolute inset-0 p-4 lg:p-6 flex lg:flex-col items-center justify-between lg:justify-end transition-opacity duration-300 ${isActive ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                        <span className="text-white font-black whitespace-nowrap lg:-rotate-90 lg:mb-20 tracking-wider text-sm lg:text-lg">
+                      <div className={`absolute inset-0 p-4 lg:p-6 flex flex-row lg:flex-col items-center justify-between lg:justify-end transition-opacity duration-300 ${isActive ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                        <span className="text-white font-bold lg:font-black whitespace-nowrap lg:-rotate-90 lg:mb-20 tracking-wider text-sm lg:text-lg">
                           {proj.title.split(' ')[0]}
                         </span>
-                        <FolderGit2 className="text-slate-500 lg:mb-4 shrink-0" size={24} />
+                        <FolderGit2 className="text-slate-500 lg:mb-4 shrink-0" size={20} />
                       </div>
 
                       {/* Expanded State Content */}
-                      <div className={`absolute inset-0 p-6 lg:p-8 flex flex-col justify-between transition-opacity duration-700 delay-200 ${isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                      <div className={`absolute inset-0 p-5 md:p-6 lg:p-8 flex flex-col justify-between transition-opacity duration-700 delay-200 ${isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                         <div>
                           {proj.hasVisual && <FrogGameVisual />}
-                          <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest block mb-2">{proj.category}</span>
-                          <h4 className="text-xl lg:text-2xl font-black text-white mb-4">{proj.title}</h4>
-                          <p className="text-slate-300 text-sm leading-relaxed mb-6 hidden md:block">{proj.description}</p>
+                          <span className="text-[10px] md:text-xs font-bold text-cyan-400 uppercase tracking-widest block mb-2">{proj.category}</span>
+                          <h4 className="text-lg md:text-xl lg:text-2xl font-black text-white mb-2 md:mb-4">{proj.title}</h4>
+                          <p className="text-slate-300 text-xs md:text-sm leading-relaxed mb-4 md:mb-6">{proj.description}</p>
                           
-                          <div className="flex flex-wrap gap-2 mb-6">
+                          <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
                             {proj.tech.map((t, i) => (
-                              <span key={i} className="text-xs font-bold bg-black/40 border border-white/10 text-cyan-300 px-3 py-1.5 rounded-full">
+                              <span key={i} className="text-[10px] md:text-xs font-bold bg-black/40 border border-white/10 text-cyan-300 px-2 md:px-3 py-1 md:py-1.5 rounded-full">
                                 {t}
                               </span>
                             ))}
                           </div>
                         </div>
 
-                        <a href={proj.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold text-pink-400 hover:text-pink-300 transition-colors w-max">
-                          <GithubIcon className="w-5 h-5" /> View Source <ExternalLink size={16} />
+                        <a href={proj.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-pink-400 hover:text-pink-300 transition-colors w-max">
+                          <GithubIcon className="w-4 h-4 md:w-5 md:h-5" /> View Source <ExternalLink size={14} />
                         </a>
                       </div>
                     </div>
@@ -431,22 +485,22 @@ export default function App() {
           </section>
 
           {/* --- GEOMETRIC INTERACTIVE TECH STACK --- */}
-          <section id="skills" className="mb-24 relative z-50">
-            <h3 className="text-2xl font-black text-white mb-12 border-b border-white/10 pb-4">Technical Stack</h3>
-            <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+          <section id="skills" className="mb-16 md:mb-24 relative z-50">
+            <h3 className="text-2xl font-black text-white mb-8 md:mb-12 border-b border-white/10 pb-4">Technical Stack</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
               {skills.map((group, idx) => (
                 <div key={idx} className="relative group">
                   <div 
                     className="geo-shape absolute inset-0 opacity-40 group-hover:opacity-70 group-hover:scale-105" 
                     style={{ backgroundColor: group.color }}
                   ></div>
-                  <div className="relative z-10 h-full bg-slate-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 lg:p-8 shadow-xl">
-                    <h4 className="text-sm font-black text-white uppercase tracking-widest mb-6 drop-shadow-md">
+                  <div className="relative z-10 h-full bg-slate-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-5 md:p-6 lg:p-8 shadow-xl">
+                    <h4 className="text-xs md:text-sm font-black text-white uppercase tracking-widest mb-4 md:mb-6 drop-shadow-md">
                       {group.category}
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {group.items.map((item, i) => (
-                        <span key={i} className="px-3 py-1.5 bg-black/60 border border-white/10 rounded-lg text-xs font-bold text-white shadow-sm">
+                        <span key={i} className="px-2 md:px-3 py-1 md:py-1.5 bg-black/60 border border-white/10 rounded-lg text-[10px] md:text-xs font-bold text-white shadow-sm">
                           {item}
                         </span>
                       ))}
