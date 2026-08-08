@@ -48,19 +48,19 @@ const UpworkIcon = ({ className = "w-5 h-5" }) => (
 
 const FrogGameVisual = () => {
   return (
-    <div className="relative w-full h-40 bg-slate-900 rounded-xl overflow-hidden border border-white/10 mb-6 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
+    <div className="relative w-full h-32 md:h-40 bg-slate-900 rounded-xl overflow-hidden border border-white/10 mb-4 md:mb-6 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
       <style>{`
         @keyframes scrollGround { 0% { background-position: 0px 0; } 100% { background-position: -40px 0; } }
-        @keyframes hop { 0%, 100% { transform: translateY(0) scaleY(0.9); } 50% { transform: translateY(-40px) scaleY(1.05); } }
+        @keyframes hop { 0%, 100% { transform: translateY(0) scaleY(0.9); } 50% { transform: translateY(-30px) scaleY(1.05); } }
         @keyframes slideLeftFast { 0% { transform: translateX(300px); } 100% { transform: translateX(-100px); } }
       `}</style>
-      <div className="absolute top-4 right-10 text-2xl animate-pulse drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">📦</div>
-      <div className="absolute bottom-0 w-full h-10 bg-slate-950 border-t-2 border-cyan-500 shadow-[0_-5px_15px_rgba(6,182,212,0.3)]"
+      <div className="absolute top-2 right-10 text-xl md:text-2xl animate-pulse drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]">📦</div>
+      <div className="absolute bottom-0 w-full h-8 md:h-10 bg-slate-950 border-t-2 border-cyan-500 shadow-[0_-5px_15px_rgba(6,182,212,0.3)]"
         style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(6,182,212,0.1) 20px, rgba(6,182,212,0.1) 21px)', animation: 'scrollGround 1.5s linear infinite' }}>
       </div>
-      <div className="absolute bottom-10 w-6 h-10 bg-slate-800 border-2 border-pink-500 rounded-t-sm shadow-[0_0_10px_rgba(236,72,153,0.5)]" style={{ animation: 'slideLeftFast 3s linear infinite' }}></div>
-      <div className="absolute bottom-10 left-1/4 z-10 drop-shadow-[0_0_8px_rgba(34,197,94,0.6)]" style={{ animation: 'hop 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite' }}>
-        <svg width="32" height="32" viewBox="0 0 16 16" style={{ imageRendering: 'pixelated' }}>
+      <div className="absolute bottom-8 md:bottom-10 w-6 h-8 md:h-10 bg-slate-800 border-2 border-pink-500 rounded-t-sm shadow-[0_0_10px_rgba(236,72,153,0.5)]" style={{ animation: 'slideLeftFast 3s linear infinite' }}></div>
+      <div className="absolute bottom-8 md:bottom-10 left-1/4 z-10 drop-shadow-[0_0_8px_rgba(34,197,94,0.6)]" style={{ animation: 'hop 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite' }}>
+        <svg width="24" height="24" viewBox="0 0 16 16" style={{ imageRendering: 'pixelated' }}>
           <path fill="#22c55e" d="M4,4 h2 v-2 h-2 z M10,4 h2 v-2 h-2 z M2,6 h2 v-2 h-2 z M12,6 h2 v-2 h-2 z M4,8 h8 v-2 h-8 z M2,10 h12 v-2 h-12 z M2,12 h12 v-2 h-12 z M2,14 h3 v-2 h-3 z M11,14 h3 v-2 h-3 z" />
           <path fill="#020617" d="M3,5 h1 v1 h-1 z M12,5 h1 v1 h-1 z" />
           <path fill="#86efac" d="M5,12 h6 v-2 h-6 z" />
@@ -85,25 +85,29 @@ export default function App() {
       title: "Business Intelligence & Analytics",
       icon: <BarChart3 className="text-pink-400" size={24} />,
       description: "Building interactive Power BI dashboards, DAX metrics, and automated data pipelines to transform raw business data into real-time decision centers.",
-      capabilities: ["Power BI Dashboards", "DAX & Data Modeling", "ETL Processing", "Executive Reporting"]
+      capabilities: ["Power BI Dashboards", "DAX & Data Modeling", "ETL Processing", "Executive Reporting"],
+      color: "#ec4899" // Pink to match icon
     },
     {
       title: "Custom Desktop & POS Engineering",
       icon: <Cpu className="text-cyan-400" size={24} />,
       description: "Developing robust C# WPF desktop platforms that automate operational workflows, POS transactions, inventory tracking, and debtor management.",
-      capabilities: ["C# & .NET Architecture", "WPF UI Engineering", "POS System Logic", "Workflow Automation"]
+      capabilities: ["C# & .NET Architecture", "WPF UI Engineering", "POS System Logic", "Workflow Automation"],
+      color: "#06b6d4" // Cyan to match icon
     },
     {
       title: "Relational Database Design",
       icon: <Database className="text-emerald-400" size={24} />,
       description: "Structuring high-performance relational database schemas, complex SQL queries, and secure data storage models from the ground up.",
-      capabilities: ["SQL Server & MySQL", "Schema Design", "Query Optimization", "FIFO Aging Logic"]
+      capabilities: ["SQL Server & MySQL", "Schema Design", "Query Optimization", "FIFO Aging Logic"],
+      color: "#10b981" // Emerald to match icon
     },
     {
       title: "Full-Stack Web & REST APIs",
       icon: <Globe className="text-amber-400" size={24} />,
       description: "Constructing scalable web platforms and ASP.NET Web APIs with role-based user access, dynamic search filtering, and secure backends.",
-      capabilities: ["ASP.NET Web API", "PHP & MySQL Web Apps", "Role-Based Security", "React Integration"]
+      capabilities: ["ASP.NET Web API", "PHP & MySQL Web Apps", "Role-Based Security", "React Integration"],
+      color: "#f59e0b" // Amber to match icon
     }
   ];
 
@@ -306,10 +310,13 @@ export default function App() {
         </div>
       </div>
 
-      {/* Sidebar */}
-      <aside className="w-full lg:w-[420px] xl:w-[480px] min-h-screen lg:fixed lg:h-screen bg-black/20 backdrop-blur-3xl border-b lg:border-b-0 lg:border-r border-white/5 p-6 md:p-12 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.5)] flex flex-col justify-center lg:justify-start overflow-y-auto hide-scroll relative">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs font-bold text-cyan-400 mb-6 md:mb-8 mt-10 lg:mt-0">
+      {/* ==========================================
+          LEFT PANEL: FULLY RESPONSIVE 100DVH
+      ========================================== */}
+      <aside className="w-full lg:w-[380px] xl:w-[420px] shrink-0 lg:fixed lg:top-0 lg:left-0 lg:h-[100dvh] bg-black/20 backdrop-blur-3xl border-b lg:border-b-0 lg:border-r border-white/5 p-6 md:p-8 lg:p-10 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.5)] overflow-y-auto hide-scroll flex flex-col justify-between relative">
+        
+        <div className="flex-1 flex flex-col">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[10px] md:text-xs font-bold text-cyan-400 mb-6 mt-8 lg:mt-0 w-max">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,1)]"></span>
             System Online / Available
           </div>
@@ -321,70 +328,63 @@ export default function App() {
             {MY_INFO.title}
           </h2>
           
-          <div className="text-slate-300 text-sm md:text-base leading-relaxed mb-10 space-y-4">
+          <div className="text-slate-300 text-sm leading-relaxed mb-8 space-y-4">
             <p>
               I build software and data solutions that actually solve problems. Whether it's replacing clunky manual workflows with clean desktop apps, writing complex SQL databases, or building interactive Power BI dashboards, I focus on making things functional, unique, and genuinely easy for people to use.
             </p>
-            <p className="flex items-start gap-2 text-slate-400 font-medium text-sm">
+            <p className="flex items-start gap-2 text-slate-400 font-medium text-xs">
               <GraduationCap className="text-pink-500 shrink-0 mt-0.5" size={16} />
               Holding a Higher Diploma in Computing & Software Engineering from Cardiff Metropolitan University (ICBT Campus).
             </p>
           </div>
 
-          <nav className="hidden lg:flex flex-col gap-4 font-bold text-sm text-slate-500 uppercase tracking-widest mb-16">
-            <a href="#services" className="hover:text-pink-400 transition-colors flex items-center gap-3 group">
-              <span className="w-8 h-[1px] bg-slate-700 group-hover:bg-pink-400 group-hover:w-12 transition-all"></span> 01. What I Do
+          {/* Responsive Navigation */}
+          <nav className="flex lg:flex-col overflow-x-auto lg:overflow-visible hide-scroll gap-3 lg:gap-4 font-bold text-xs md:text-sm text-slate-500 uppercase tracking-widest pb-4 lg:pb-0 mb-4 lg:mb-0 w-full shrink-0">
+            <a href="#services" className="hover:text-pink-400 transition-colors flex items-center gap-2 lg:gap-3 group shrink-0 bg-white/5 lg:bg-transparent px-4 py-2 lg:p-0 rounded-full lg:rounded-none">
+              <span className="hidden lg:block w-8 h-[1px] bg-slate-700 group-hover:bg-pink-400 group-hover:w-12 transition-all"></span> 01. What I Do
             </a>
-            <a href="#experience" className="hover:text-pink-400 transition-colors flex items-center gap-3 group">
-              <span className="w-8 h-[1px] bg-slate-700 group-hover:bg-pink-400 group-hover:w-12 transition-all"></span> 02. Experience
+            <a href="#experience" className="hover:text-pink-400 transition-colors flex items-center gap-2 lg:gap-3 group shrink-0 bg-white/5 lg:bg-transparent px-4 py-2 lg:p-0 rounded-full lg:rounded-none">
+              <span className="hidden lg:block w-8 h-[1px] bg-slate-700 group-hover:bg-pink-400 group-hover:w-12 transition-all"></span> 02. Experience
             </a>
-            <a href="#projects" className="hover:text-pink-400 transition-colors flex items-center gap-3 group">
-              <span className="w-8 h-[1px] bg-slate-700 group-hover:bg-pink-400 group-hover:w-12 transition-all"></span> 03. Architecture
+            <a href="#projects" className="hover:text-pink-400 transition-colors flex items-center gap-2 lg:gap-3 group shrink-0 bg-white/5 lg:bg-transparent px-4 py-2 lg:p-0 rounded-full lg:rounded-none">
+              <span className="hidden lg:block w-8 h-[1px] bg-slate-700 group-hover:bg-pink-400 group-hover:w-12 transition-all"></span> 03. Architecture
             </a>
-            <a href="#skills" className="hover:text-pink-400 transition-colors flex items-center gap-3 group">
-              <span className="w-8 h-[1px] bg-slate-700 group-hover:bg-pink-400 group-hover:w-12 transition-all"></span> 04. Tech Stack
+            <a href="#skills" className="hover:text-pink-400 transition-colors flex items-center gap-2 lg:gap-3 group shrink-0 bg-white/5 lg:bg-transparent px-4 py-2 lg:p-0 rounded-full lg:rounded-none">
+              <span className="hidden lg:block w-8 h-[1px] bg-slate-700 group-hover:bg-pink-400 group-hover:w-12 transition-all"></span> 04. Tech Stack
             </a>
-            <a href="#connect" className="hover:text-cyan-400 transition-colors flex items-center gap-3 group">
-              <span className="w-8 h-[1px] bg-slate-700 group-hover:bg-cyan-400 group-hover:w-12 transition-all"></span> 05. Connect
+            <a href="#connect" className="hover:text-cyan-400 transition-colors flex items-center gap-2 lg:gap-3 group shrink-0 bg-white/5 lg:bg-transparent px-4 py-2 lg:p-0 rounded-full lg:rounded-none">
+              <span className="hidden lg:block w-8 h-[1px] bg-slate-700 group-hover:bg-cyan-400 group-hover:w-12 transition-all"></span> 05. Connect
             </a>
           </nav>
         </div>
 
-        <div id="connect" className="mt-8 lg:mt-auto flex flex-col gap-3 relative z-30 pb-10 lg:pb-0">
-          <a href={`mailto:${MY_INFO.email}`} className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-pink-500/20 hover:border-pink-500/50 hover:shadow-[0_0_20px_rgba(236,72,153,0.2)] transition-all group font-medium text-sm md:text-base">
-            <div className="p-2 bg-white/10 rounded-lg group-hover:text-pink-400 transition-colors"><Mail size={18} /></div>
+        {/* Contact Block */}
+        <div id="connect" className="flex flex-col gap-3 relative z-30 shrink-0 mt-6 lg:mt-8">
+          <a href={`mailto:${MY_INFO.email}`} className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-pink-500/20 hover:border-pink-500/50 hover:shadow-[0_0_20px_rgba(236,72,153,0.2)] transition-all group font-medium text-sm">
+            <div className="p-2 bg-white/10 rounded-lg group-hover:text-pink-400 transition-colors"><Mail size={16} /></div>
             {MY_INFO.email}
           </a>
-          <a href={MY_INFO.upwork} target="_blank" rel="noreferrer" className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-[#14A800]/20 hover:border-[#14A800]/50 hover:shadow-[0_0_20px_rgba(20,168,0,0.2)] transition-all group font-medium text-sm md:text-base">
+          <a href={MY_INFO.upwork} target="_blank" rel="noreferrer" className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-[#14A800]/20 hover:border-[#14A800]/50 hover:shadow-[0_0_20px_rgba(20,168,0,0.2)] transition-all group font-medium text-sm">
             <div className="p-2 bg-white/10 rounded-lg group-hover:text-[#14A800] transition-colors"><UpworkIcon className="w-4 h-4" /></div>
             Hire on Upwork
           </a>
-          <div className="grid grid-cols-2 gap-3 mt-1 mb-6">
-            <a href={MY_INFO.linkedin} target="_blank" rel="noreferrer" className="flex justify-center items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-[#0A66C2]/20 hover:border-[#0A66C2]/50 transition-all group text-sm font-medium">
+          <div className="grid grid-cols-2 gap-3 mt-1 mb-2">
+            <a href={MY_INFO.linkedin} target="_blank" rel="noreferrer" className="flex justify-center items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-[#0A66C2]/20 hover:border-[#0A66C2]/50 transition-all group text-xs font-bold">
               <LinkedinIcon className="w-4 h-4 group-hover:text-[#0A66C2]" /> LinkedIn
             </a>
-            <a href={MY_INFO.github} target="_blank" rel="noreferrer" className="flex justify-center items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/20 hover:border-white/40 transition-all group text-sm font-medium">
+            <a href={MY_INFO.github} target="_blank" rel="noreferrer" className="flex justify-center items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/20 hover:border-white/40 transition-all group text-xs font-bold">
               <GithubIcon className="w-4 h-4 group-hover:text-white" /> GitHub
             </a>
           </div>
-
-          <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-            <p className="text-slate-400 font-medium text-xs leading-relaxed flex items-start gap-2">
-              <Smile className="text-cyan-500 shrink-0" size={16} />
-              I am currently open to freelance projects and full-time roles. Let's build something great together!
-            </p>
-          </div>
         </div>
 
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-slate-500 lg:hidden animate-bounce opacity-70">
-          <span className="text-[10px] font-bold uppercase tracking-widest">Scroll</span>
-          <ChevronDown size={16} />
-        </div>
       </aside>
 
-      {/* Main Canvas */}
-      <main className="flex-1 lg:ml-[420px] xl:ml-[480px] relative z-10 hide-scroll">
-        <div className="max-w-5xl mx-auto p-6 md:p-12 lg:p-16 xl:p-24 pt-16 md:pt-24 lg:pt-16">
+      {/* ==========================================
+          RIGHT PANEL: MAIN CONTENT
+      ========================================== */}
+      <main className="flex-1 w-full lg:ml-[380px] xl:ml-[420px] relative z-10 hide-scroll">
+        <div className="max-w-5xl mx-auto p-5 md:p-10 lg:p-16 xl:p-20 pt-10 md:pt-16 lg:pt-16">
 
           {/* System Metrics */}
           <section id="dashboard" className="mb-16 md:mb-24">
@@ -394,65 +394,73 @@ export default function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl hover:border-cyan-500/30 transition-colors">
                 <div className="text-cyan-500 mb-4"><MapPin size={20} /></div>
-                <div className="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider">Current Node Server</div>
+                <div className="text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Current Node Server</div>
                 <div className="text-lg md:text-xl font-black text-white mb-1">Negombo, Sri Lanka</div>
-                <div className="text-pink-400 font-mono text-xs md:text-sm flex items-center gap-2"><Clock size={14} /> {time}</div>
+                <div className="text-pink-400 font-mono text-xs flex items-center gap-2"><Clock size={14} /> {time}</div>
               </div>
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl hover:border-cyan-500/30 transition-colors">
                 <div className="text-cyan-500 mb-4"><Code2 size={20} /></div>
-                <div className="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider">Core Architecture</div>
+                <div className="text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Core Architecture</div>
                 <div className="text-lg md:text-xl font-black text-white mb-1">.NET & Data BI</div>
-                <div className="text-pink-400 font-mono text-xs md:text-sm">C# / SQL / Power BI</div>
+                <div className="text-pink-400 font-mono text-xs">C# / SQL / Power BI</div>
               </div>
             </div>
           </section>
 
-          {/* --- NEW: WHAT I DO / SERVICES SECTION --- */}
+          {/* --- WHAT I DO / SERVICES SECTION (NOW WITH ANIMATED BLOBS) --- */}
           <section id="services" className="mb-16 md:mb-24">
             <div className="flex items-center gap-2 text-xs font-bold text-cyan-400 uppercase tracking-widest mb-2">
               <Workflow size={14} /> Professional Services
             </div>
-            <h3 className="text-2xl font-black text-white mb-8 border-b border-white/10 pb-4">What I Do & How I Deliver Value</h3>
+            <h3 className="text-2xl md:text-3xl font-black text-white mb-8 border-b border-white/10 pb-4">What I Do</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
               {services.map((srv, idx) => (
-                <div key={idx} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl hover:border-pink-500/40 hover:bg-white/10 transition-all duration-300">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 bg-black/40 border border-white/10 rounded-xl">{srv.icon}</div>
-                    <h4 className="text-lg font-bold text-white leading-snug">{srv.title}</h4>
-                  </div>
-                  <p className="text-slate-300 text-xs md:text-sm leading-relaxed mb-6">{srv.description}</p>
-                  <div className="grid grid-cols-2 gap-2 border-t border-white/5 pt-4">
-                    {srv.capabilities.map((cap, i) => (
-                      <div key={i} className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
-                        <CheckCircle2 size={12} className="text-cyan-400 shrink-0" />
-                        <span>{cap}</span>
-                      </div>
-                    ))}
+                <div key={idx} className="relative group">
+                  {/* The Interactive Geometric Shape Background */}
+                  <div 
+                    className="geo-shape absolute inset-0 opacity-40 group-hover:opacity-70 group-hover:scale-105" 
+                    style={{ backgroundColor: srv.color }}
+                  ></div>
+                  
+                  {/* The Frosted Glass Container on top */}
+                  <div className="relative z-10 h-full bg-slate-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl transition-all duration-300">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 md:p-3 bg-black/40 border border-white/10 rounded-xl">{srv.icon}</div>
+                      <h4 className="text-sm md:text-base font-bold text-white leading-snug">{srv.title}</h4>
+                    </div>
+                    <p className="text-slate-300 text-xs md:text-sm leading-relaxed mb-6">{srv.description}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 border-t border-white/5 pt-4">
+                      {srv.capabilities.map((cap, i) => (
+                        <div key={i} className="flex items-center gap-1.5 text-[10px] md:text-[11px] font-bold text-slate-400">
+                          <CheckCircle2 size={12} className="text-cyan-400 shrink-0" />
+                          <span>{cap}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Development Process Bar */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Engineering Workflow</h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-5 md:p-6 hidden sm:block">
+              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Engineering Workflow</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
                 <div className="p-3 bg-black/30 border border-white/5 rounded-xl">
                   <span className="text-xs font-black text-pink-400 block mb-1">01. Discovery</span>
-                  <span className="text-[11px] text-slate-300 font-medium">Workflow Analysis</span>
+                  <span className="text-[10px] text-slate-300 font-medium">Workflow Analysis</span>
                 </div>
                 <div className="p-3 bg-black/30 border border-white/5 rounded-xl">
                   <span className="text-xs font-black text-cyan-400 block mb-1">02. Architecture</span>
-                  <span className="text-[11px] text-slate-300 font-medium">Schema & UI Design</span>
+                  <span className="text-[10px] text-slate-300 font-medium">Schema & UI Design</span>
                 </div>
                 <div className="p-3 bg-black/30 border border-white/5 rounded-xl">
                   <span className="text-xs font-black text-amber-400 block mb-1">03. Build</span>
-                  <span className="text-[11px] text-slate-300 font-medium">C# / SQL / Web Code</span>
+                  <span className="text-[10px] text-slate-300 font-medium">C# / Web Code</span>
                 </div>
                 <div className="p-3 bg-black/30 border border-white/5 rounded-xl">
                   <span className="text-xs font-black text-emerald-400 block mb-1">04. Analytics</span>
-                  <span className="text-[11px] text-slate-300 font-medium">Power BI Integration</span>
+                  <span className="text-[10px] text-slate-300 font-medium">BI Integration</span>
                 </div>
               </div>
             </div>
@@ -460,63 +468,63 @@ export default function App() {
 
           {/* Experience */}
           <section id="experience" className="mb-16 md:mb-24">
-            <h3 className="text-2xl font-black text-white mb-8 border-b border-white/10 pb-4">Professional History</h3>
+            <h3 className="text-2xl md:text-3xl font-black text-white mb-8 border-b border-white/10 pb-4">Professional History</h3>
             <div className="relative border-l border-white/10 pl-6 md:pl-8 pb-10 md:pb-12">
               <div className="absolute w-3 h-3 bg-pink-500 rounded-full -left-[6.5px] top-1.5 shadow-[0_0_10px_rgba(236,72,153,0.8)]"></div>
-              <span className="text-xs font-bold text-pink-400 uppercase tracking-widest mb-2 block">Present</span>
-              <h4 className="text-lg md:text-xl font-bold text-white">IT Intern (Data Analytics)</h4>
-              <p className="text-cyan-400 text-sm md:text-base font-medium mb-4">United Tobacco Processing SL</p>
-              <p className="text-slate-400 text-sm md:text-base leading-relaxed">Building interactive enterprise dashboards using Microsoft Power BI. Managing data cleaning, ETL pipelines, and validation across relational sources to translate business reporting requirements into functional metrics.</p>
+              <span className="text-[10px] md:text-xs font-bold text-pink-400 uppercase tracking-widest mb-2 block">Present</span>
+              <h4 className="text-base md:text-lg font-bold text-white">IT Intern (Data Analytics)</h4>
+              <p className="text-cyan-400 text-xs md:text-sm font-medium mb-3 md:mb-4">United Tobacco Processing SL</p>
+              <p className="text-slate-400 text-xs md:text-sm leading-relaxed">Building interactive enterprise dashboards using Microsoft Power BI. Managing data cleaning, ETL pipelines, and validation across relational sources to translate business reporting requirements into functional metrics.</p>
             </div>
             <div className="relative border-l border-white/10 pl-6 md:pl-8">
               <div className="absolute w-3 h-3 bg-slate-700 rounded-full -left-[6.5px] top-1.5"></div>
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">2026 (Project)</span>
-              <h4 className="text-lg md:text-xl font-bold text-white">Full Stack Developer</h4>
-              <p className="text-slate-300 text-sm md:text-base font-medium mb-4">StackNet (Pvt) Ltd</p>
-              <p className="text-slate-400 text-sm md:text-base leading-relaxed">Developed ASP.NET WebForms interfaces with C# backends. Structured relational database schemas from scratch and optimized SQL queries for inventory management reporting.</p>
+              <span className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">2026 (Project)</span>
+              <h4 className="text-base md:text-lg font-bold text-white">Full Stack Developer</h4>
+              <p className="text-slate-300 text-xs md:text-sm font-medium mb-3 md:mb-4">StackNet (Pvt) Ltd</p>
+              <p className="text-slate-400 text-xs md:text-sm leading-relaxed">Developed ASP.NET WebForms interfaces with C# backends. Structured relational database schemas from scratch and optimized SQL queries for inventory management reporting.</p>
             </div>
           </section>
 
           {/* Projects */}
           <section id="projects" ref={scrollContainerRef} className="relative h-auto lg:h-[200vh] mb-16 md:mb-24">
-            <div className="lg:sticky lg:top-24 z-10 lg:pt-4">
-              <h3 className="text-2xl font-black text-white mb-8 border-b border-white/10 pb-4">System Architecture</h3>
+            <div className="lg:sticky lg:top-20 z-10 lg:pt-4">
+              <h3 className="text-2xl md:text-3xl font-black text-white mb-8 border-b border-white/10 pb-4">System Architecture</h3>
               
-              <div className="flex flex-col lg:flex-row gap-4 lg:h-[500px] w-full">
+              <div className="flex flex-col lg:flex-row gap-4 min-h-[400px] lg:h-[450px] xl:h-[500px] w-full">
                 {projects.map((proj, idx) => {
                   const isActive = activeProject === idx;
                   return (
                     <div 
                       key={idx} 
                       onClick={() => setActiveProject(idx)}
-                      className={`relative overflow-hidden rounded-3xl transition-all duration-700 ease-in-out cursor-pointer border border-white/10 backdrop-blur-sm
-                        ${isActive ? 'w-full lg:w-[60%] flex-1 lg:h-full bg-white/10 shadow-[0_0_30px_rgba(6,182,212,0.15)] min-h-[400px] lg:min-h-0' : 'w-full lg:w-[10%] h-16 lg:h-full bg-white/5 hover:bg-white/10 opacity-80 lg:opacity-60'}
+                      className={`relative overflow-hidden rounded-2xl md:rounded-3xl transition-all duration-700 ease-in-out cursor-pointer border border-white/10 backdrop-blur-sm
+                        ${isActive ? 'w-full lg:w-[60%] flex-1 lg:h-full bg-white/10 shadow-[0_0_30px_rgba(6,182,212,0.15)] min-h-[400px] lg:min-h-0' : 'w-full lg:w-[10%] h-14 md:h-16 lg:h-full bg-white/5 hover:bg-white/10 opacity-80 lg:opacity-60'}
                       `}
                     >
                       <div className={`absolute inset-0 p-4 lg:p-6 flex flex-row lg:flex-col items-center justify-between lg:justify-end transition-opacity duration-300 ${isActive ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                        <span className="text-white font-bold lg:font-black whitespace-nowrap lg:-rotate-90 lg:mb-20 tracking-wider text-sm lg:text-lg">
+                        <span className="text-white font-bold lg:font-black whitespace-nowrap lg:-rotate-90 lg:mb-20 tracking-wider text-xs md:text-sm lg:text-lg">
                           {proj.title.split(' ')[0]}
                         </span>
-                        <FolderGit2 className="text-slate-500 lg:mb-4 shrink-0" size={20} />
+                        <FolderGit2 className="text-slate-500 lg:mb-4 shrink-0" size={18} />
                       </div>
 
                       <div className={`absolute inset-0 p-5 md:p-6 lg:p-8 flex flex-col justify-between transition-opacity duration-700 delay-200 ${isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                         <div>
                           {proj.hasVisual && <FrogGameVisual />}
-                          <span className="text-[10px] md:text-xs font-bold text-cyan-400 uppercase tracking-widest block mb-2">{proj.category}</span>
+                          <span className="text-[9px] md:text-[10px] lg:text-xs font-bold text-cyan-400 uppercase tracking-widest block mb-2">{proj.category}</span>
                           <h4 className="text-lg md:text-xl lg:text-2xl font-black text-white mb-2 md:mb-4">{proj.title}</h4>
                           <p className="text-slate-300 text-xs md:text-sm leading-relaxed mb-4 md:mb-6">{proj.description}</p>
                           
                           <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
                             {proj.tech.map((t, i) => (
-                              <span key={i} className="text-[10px] md:text-xs font-bold bg-black/40 border border-white/10 text-cyan-300 px-2 md:px-3 py-1 md:py-1.5 rounded-full">
+                              <span key={i} className="text-[9px] md:text-[10px] lg:text-xs font-bold bg-black/40 border border-white/10 text-cyan-300 px-2 md:px-3 py-1 md:py-1.5 rounded-full">
                                 {t}
                               </span>
                             ))}
                           </div>
                         </div>
 
-                        <a href={proj.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-pink-400 hover:text-pink-300 transition-colors w-max">
+                        <a href={proj.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-[11px] md:text-xs lg:text-sm font-bold text-pink-400 hover:text-pink-300 transition-colors w-max">
                           <GithubIcon className="w-4 h-4 md:w-5 md:h-5" /> View Source <ExternalLink size={14} />
                         </a>
                       </div>
@@ -529,8 +537,8 @@ export default function App() {
 
           {/* Tech Stack */}
           <section id="skills" className="mb-16 md:mb-24 relative z-50">
-            <h3 className="text-2xl font-black text-white mb-8 md:mb-12 border-b border-white/10 pb-4">Technical Stack</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
+            <h3 className="text-2xl md:text-3xl font-black text-white mb-8 md:mb-12 border-b border-white/10 pb-4">Technical Stack</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
               {skills.map((group, idx) => (
                 <div key={idx} className="relative group">
                   <div 
